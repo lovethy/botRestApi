@@ -1,7 +1,7 @@
 const users = { "name":"bb" };
 
 
-let getIndex = async function () {
+let getIndex = () => {
     try {
         return users;
     } catch (e) {
@@ -10,9 +10,16 @@ let getIndex = async function () {
     }
 }
 
-let getApi = async function (req) {
+let getApi = (req) => {
     try {
-        return req.body;
+        console.log(req.headers);
+        console.log(req.headers.authorization);
+        console.log(req.body);
+        return new Promise(function(resolve, reject) {
+            setTimeout(() => {
+                resolve(req.body);
+           } , 1000); 
+        });
     } catch (e) {
         // Log Errors
         throw Error(e);

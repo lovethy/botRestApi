@@ -5,6 +5,7 @@ var auth = require('../auth');
 
 /* GET home page. */
 router.post('/', controller.getLogin);
-router.post('/api', controller.getApi);
+//router.post('/api', controller.getApi);
+router.post("/api", auth.isAuthenticated(), controller.getApi);
 
 module.exports = router;

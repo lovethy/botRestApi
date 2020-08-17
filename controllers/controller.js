@@ -23,7 +23,6 @@ let getLogin = async function (req, res, next) {
 
 let getApi = async function (req, res, next) {
     try {
-
         var api = await Service.getApi(req);
         return res.json(api);
     } catch (e) {

@@ -1,32 +1,41 @@
 'use strict';
 
+require('dotenv').config();
 var jwt = require('jsonwebtoken');
 var compose = require('composable-middleware');
-var SECRET = 'scrkeyChatBotTH';
-var options = {expiresIn: '20m', subject: 'chatBotConnect'};
+var SECRET = process.env.SECRET;
+var options = {expiresIn: '10y', subject: 'chatBotConnect'};
 
 // JWT 토큰 생성 함수
-function signToken(id) {
+let signToken = (id) => {
   return jwt.sign({id: id}, SECRET, options);
 }
 
 // 토큰을 해석하여 유저 정보를 얻는 함수
-function isAuthenticated() {
+let isAuthenticated = () => {
   return compose()
     // Validate jwt
-    .use(function(req, res, next) {
-      var decoded = jwt.verify(req.headers.authorization, SECRET);
-      console.log(decoded) // '{id: 'user_id'}'
-      req.user = decode;
-    })
-    // Attach user to request
-    .use(function(req, res, next) {
-      req.user = {
-        id: req.user.id,
-        name: 'name of ' + req.user.id
-      };
-      next();
-    });
+    .use(async function(req, res, next) {
+      try {
+        console.log(req.headers.authorization);
+        var token = req.headers['x-access-token'] || req.headers.authorization || req.query.token;
+        var decode = await decodeToken(token);
+        next();
+      } catch (err){
+        return res.json({message:err.message});
+      }
+  });
+}
+
+let decodeToken = async (token) => {
+  return new Promise(
+      (resolve, reject) => {
+          jwt.verify(token, SECRET, (error, decoded) => {
+              if(error) reject(error);
+              resolve(decoded);
+          });
+      }
+  );
 }
 
 exports.signToken = signToken;

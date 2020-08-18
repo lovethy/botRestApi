@@ -4,7 +4,7 @@ require('dotenv').config();
 var jwt = require('jsonwebtoken');
 var compose = require('composable-middleware');
 var SECRET = process.env.SECRET;
-var options = {expiresIn: '20y', subject: 'chatBotConnect'};
+var options = {expiresIn: '20m', subject: 'chatBotConnect'};
 
 // JWT 토큰 생성 함수
 let signToken = (id) => {
@@ -17,9 +17,8 @@ let isAuthenticated = () => {
     // Validate jwt
     .use(async function(req, res, next) {
       try {
-        console.log(req.headers.authorization);
         var token = req.headers['x-access-token'] || req.headers.authorization || req.query.token;
-        var decode = await decodeToken(token);
+        req.decoded = await decodeToken(token);
         next();
       } catch (err){
         return res.json({message:err.message});
@@ -29,12 +28,12 @@ let isAuthenticated = () => {
 
 let decodeToken = async (token) => {
   return new Promise(
-      (resolve, reject) => {
-          jwt.verify(token, SECRET, (error, decoded) => {
-              if(error) reject(error);
-              resolve(decoded);
-          });
-      }
+    (resolve, reject) => {
+      jwt.verify(token, SECRET, (error, decoded) => {
+        if(error) reject(error);
+        resolve(decoded);
+      });
+    }
   );
 }
 

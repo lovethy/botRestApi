@@ -4,7 +4,7 @@ require('dotenv').config();
 var jwt = require('jsonwebtoken');
 var compose = require('composable-middleware');
 var SECRET = process.env.SECRET;
-var options = {expiresIn: '10y', subject: 'chatBotConnect'};
+var options = {expiresIn: '20y', subject: 'chatBotConnect'};
 
 // JWT 토큰 생성 함수
 let signToken = (id) => {

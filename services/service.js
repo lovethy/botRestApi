@@ -28,7 +28,10 @@ let getIntent = (q) => {
             if (!error && response.statusCode == 200) {
                 var rs = JSON.parse(body);
                 console.log(rs.prediction.intents);
-                resolve(rs.prediction.topIntent);
+                setTimeout(function(){
+                    resolve(rs.prediction.topIntent);
+                }, 1000);
+                //resolve(rs.prediction.topIntent);
             }
         })
     });

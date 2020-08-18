@@ -1,24 +1,25 @@
 var Service = require('../services/service');
-var passport = require('passport');
+//var passport = require('passport');
 var auth = require('../auth');
+require('dotenv').config();
 
 // 패스포트 세팅
-require('../passport').setup();
+//require('../passport').setup();
 
 let getLogin = async function (req, res, next) {
     //  패스포트 모듈로 인증 시도
-    passport.authenticate('local', function (err, user, info) {
-        var error = err || info;
-        if (error) {
-            console.log(error);
-            return res.status(401).json(error);
-        }
-        if (!user) return res.status(404).json({message: 'Something went wrong, please try again.'});
+    // passport.authenticate('local', function (err, user, info) {
+    //     var error = err || info;
+    //     if (error) {
+    //         console.log(error);
+    //         return res.status(401).json(error);
+    //     }
+    //     if (!user) return res.status(404).json({message: 'Something went wrong, please try again.'});
 
         // 인증된 유저 정보로 응답
-        var token = auth.signToken(user.id);
-        res.status(200).json({access_token: token})
-    })(req, res, next);
+    var token = auth.signToken(process.env.USER);
+    res.status(200).json({access_token: token})
+    //})(req, res, next);
 }
 
 let getApi = async function (req, res, next) {
